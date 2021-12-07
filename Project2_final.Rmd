@@ -1,0 +1,139 @@
+---
+title: "Project 2, Final"
+output: html_notebook
+---
+
+Scientific question: Is it possible that the delta variant of the Covid-19 virus, which has a higher infection rate especially in vaccinated individuals, came from a different natural reservoir than the original Covid-19 virus, or did it arise from evolution and natural selection in the human population? 
+
+Background: Coronaviruses are enveloped viruses that replicate after gaining access to intracellular host machinery. They are typically made as a polyprotein that is then cleaved by host proteases, and only replicate through the use of viral RNA dependent RNA polymerases (rdrp). They have a type of RNA called subgenomic RNA that are made during negative strand synthesis through discontinuous transcription (template hopping). The spike protien, alongside other protiens that are advantageous for the virus to have a high amount of, are located on the subgenomic RNA. Since the spike protein is what interacts with host receptors (the ACE2 receptor in human:SARS-CoV-2 infection) it is advantageous for there to be more of that protein on the viral envelope since it gives the virus a higher likelihood to interact with host receptors. The viral spike protein receptor binding domain is also considered a “hot spot” of evolution, this is determined by interaction with the host viral receptor (ACE2). If there is an advantageous mutation in the spike protein, meaning the spike protein is able to bind to the ACE2 receptor more efficiently or any other advantageous phenotypic difference, then that particular virus will be able to infect and replicate at a higher rate than the original virus. Again it is important to remember that viruses do not choose where they gain mutations, mutations are random and are typically disadvantageous. These disadvantageous mutations are lost in a population due to being unstable or inefficient. Typically mutations in structural proteins are lost in populations due to them negatively affecting the function of the virus as a whole. Evolutionary hot spots and large enough population sizes allow mutations in viruses to test their function, and mutations that positively affect the virus’s infection ability have the opportunity to fix in a population. I also want to mention that this “hotspot” evolution is not specific to coronaviruses, in fact coronaviruses are typically so big that they have proofreading mechanisms so mutations are less likely to occur in coronaviruses, all viruses mutate within an evolutionary arms race alongside the host receptor they interact with. I got these data, meaning the sequences of each the human coronavirus spike protein, the delta variant spike protein, the bat coronavirus spike protein and the pangolin coronavirus spike protein, from the protein databank website (https://www.rcsb.org/). 
+http://www.mjpath.org.my/2020/v42n1/properties-of-coronavirus.pdf
+https://pubmed.ncbi.nlm.nih.gov/32376714/
+Daughtery, Class 9 Togaviridae and Coronaviridae, Virology, WI21
+
+
+Hypothesis: If the delta variant of the Covid-19 virus arose through natural selection within the human population then its AA sequence will be more similar to the original Covid-19 virus than any other natural or intermediate host's coronaviruses.
+
+Description of what analyses were done and how the data was downloaded for the project:
+I downloaded four different spike protein sequences to research my hypothesis. These sequences were gathered by searching the name of the species and spike protien and then going under the sequences tab and downloading the data as a fasta file. In order to test my hypothesis I compared the original human coronavirus spike protein’s sequence to the other three spike proteins using the msa package and function. Then from that I used a function called dist.alignment within the msa package, that allowed me to get three values that scored the relatedness of each sequence to the original SARS-CoV-2 spike protein. This function gives a score of 0 to 1, zero being identical and 1 being not related at all, so the lower the score the more related the original sequence the spike protein was. After this I created a vector with the scores outputted from the dist.alignment function. Then i used the function order setting decreasing = FALSE, in order for the data to be put in increasing order, we see that it prints out 1, 3, 2 meaning that HvD < HvB < HvP meaning that the delta spike protein is the most related to the original spike protein and the pangolin spike protein is the least related. Then I wrote my own function that would do the comparison for the coder and will print out what the less than or greater than means. This code is helpful because it takes out the possibility of human error in interpreting the results. Then i used the function nj within the ape package which allows me to create a phylogenetic object when inputting a distance matrix. Then I plotted the tree with the main label being “Phylogenetic Tree of Different Spike Protein AA Sequences”.
+
+
+Definition of each of the packages loaded:
+library("BiocManager")
+	BiocManager: BiocManager is used to install and manage packages that will be used for statistical analysis and analysis of genomic data. https://cran.r-project.org/web/packages/BiocManager/vignettes/BiocManager.html
+
+library("Biostrings")
+	Biostrings: Biostrings is used for matching and manipulating strings, or sequences, of amino acids and or nucelotides.
+https://bioconductor.org/packages/release/bioc/html/Biostrings.html
+
+library("seqinr")
+	Seqinr: Seqinr allows for visualization and exploration of both DNA (nucleotides) and protein (amino acid) sequence data. 
+https://cran.r-project.org/web/packages/seqinr/index.html
+
+library("msa")
+	Msa: msa is used to do multiple sequence alignment, it also has functions, such as msaprettyprint that allow for easier visualization of the alignment. http://bioconductor.org/packages/release/bioc/html/msa.html
+
+library(ape)
+	Ape: This package provides everything needed to visualize data in a phylogenetic tree that shows evolution as a function of time or mutations. 
+https://cran.r-project.org/web/packages/ape/ape.pdf
+
+Description of the bioinformatics method that includes data types read in and how the method works: 
+
+The bioinformatics method that I used was multiple sequence alignment. This allowed me to align each fasta file of the different spike protiens. I wanted to know if the delta varient is more similar to the orignal human corona virus or if it was more similar to coronaviruses found in the intermeidate or natural hosts. The msa function would not be able to help me determine this by itself so I also used a function called dist.alignment. This function creates a distance alignment score based on the alignment from the msa function for each of the sequences compared to the orginal coronavirus spike protein. The lower the score the more related the two spike protiens are. The human coronavirus spike protien and delta varient had a score of 0.2469517. The human coronavirus spike protien and bat spike protein had a score of 0.2544009. The human coronavirus spike protien and pangolin spike protein had a score of 0.3604328. 
+
+Description of data analysis method:
+
+A phylogenetic tree is a way to visualize evolutionary descendants from a common ancestor. In my tree, we are looking at evolution in the amino acid sequence in four different spike protiens. The further away the most recent common ancestor, or node, is the more evolutionarily different these amino acid sequences are. However, to get to the phylogenetic tree we have to align and compare each sequence to get a numerical value that represents the similarity to the original SARS-CoV-2 spike protein. Each sequence starts as a fasta file, is converted to a string of amino acids, and then a distance alignment score is given to each sequence in comparison to the original SARS-CoV-2 spike protein. These values are then used to create a phylogenetic tree.
+
+Analyzing the data:
+
+When reading a phylogenetic tree each of the leaves, which are the tips of the lines, is one sequence. The closer the two leaves in a clade are, the more related the sequence. When analyzing “Phylogenetic Tree of Different Spike Protein AA Sequences”, the 7V7V (delta spike protein) and 7DWY (human spike protein) sequences share a more recent common ancestor than the other sequences, this is shown by them sharing a node. This suggests that the delta spike protein and the human coronavirus spike protien are more similar in amino acid sequence than the others, indicating that the delta variant evolved from the human coronavirus spike protein and it was not a new virus that emerged and evolved in a host other than a human. This is also shown in the function that I created that prints out text that explains what each comparison means. 
+
+Extra Help:
+Here I have included helpful links that explain some packages and functions used in this R notebook. 
+
+Information on global and local variables: https://www.geeksforgeeks.org/scope-of-variable-in-r/
+
+Help with msa: http://bioconductor.org/packages/release/bioc/html/msa.html
+
+Info on ape package: https://cran.r-project.org/web/packages/ape/ape.pdf
+
+Help with writing my own function: https://www.datamentor.io/r-programming/return-function/
+
+Help with sorting values: https://www.datacamp.com/community/tutorials/sorting-in-r
+
+Protein data bank website: https://www.rcsb.org/
+
+
+
+```{r}
+#if(!requireNamespace("BiocManager", quietly = TRUE))
+  # install.packages("BiocManager")
+#BiocManager::install("msa")
+library("BiocManager")
+library("Biostrings")
+library("seqinr")
+library("msa")
+
+#Here we are reading in the fasta files downloaded from the PDB website and converting them into amino acid sequences that we can do more analysis on a bit later. I kept the files named alongside of their PDB ID so if you want to look at their structure or do more research on these proteins it is easier to find them on the PDB website. Each of these files are global variables as they can be accessed from any portion of the program.
+#pangolin spike
+read.fasta(file = "rcsb_pdb_7BBH.fasta")
+pangolin_7BBH <- readAAStringSet("rcsb_pdb_7BBH.fasta")
+
+#bat spike
+read.fasta(file = "rcsb_pdb_7CN4.fasta")
+bat_7CN4 <- readAAStringSet("rcsb_pdb_7CN4.fasta")
+
+#human spike
+read.fasta(file = "rcsb_pdb_7DWY.fasta")
+human_7DWY <- readAAStringSet("rcsb_pdb_7DWY.fasta")
+
+#delta spike
+read.fasta(file = "rcsb_pdb_7V7V.fasta")
+delta_7V7V <- readAAStringSet("rcsb_pdb_7V7V.fasta")
+
+#Using the function msa, we will align each of the four fasta amino acid sequences so we can do more analyses on these data. If you wanted to add more sequences or run this code on your own with different data you would change the names of the files in the msa function to the names above after you ran the function readAAStringSet. It is not necessary to add show = "complete" in this step however, I think it is interesting to see the consensus sequence in comparison to each line of sequence. Each of these variables are global variables as they can be accessed from any portion of the program.
+"spikeproteinalignment" <- msa(c(pangolin_7BBH, bat_7CN4, human_7DWY, delta_7V7V))
+print (spikeproteinalignment, show = "complete")
+
+
+#Use dist.alignment to get distance alignment values of the different AA sequences of the spike proteins. This is necessary to be able to compare the values in a phylogenetic tree later. Make sure to have a different name for your second alignment in this step, I found it easier to keep track of this if I changed the name to just have the number 2 at the end of it. Each of these variables are global variables as they can be accessed from any portion of the program.
+library(seqinr)
+spikeproteinalignment2 <- msaConvert(spikeproteinalignment, type = "seqinr::alignment")
+sProteinDA <- dist.alignment(spikeproteinalignment2, "identity")
+print(sProteinDA)
+
+
+#After our matrix (sProteinDA) is printed there will be a ton of values printed. The ones to focus on are in the first chunk, those are the comparisons of each of the three sequences to the original SARS-CoV-2 spike protein. To simplify the next few analysis steps I created a numerical value assigned to a three letter code. The H stands for Human, D stands for delta, P stands for pangolin, B stands for bat and v stands for versus. All three of these variables are global variables and can be accessed from any portion of the program.
+#Comparison values
+HvD <- (0.2469517)
+  #HvD, Human spike versus Delta spike
+HvP <- (0.3604328)
+  #HvP, Human spike versus Pangolin spike
+HvB <- (0.2544009)
+  #HvB, Human spike versus Bat spike
+
+#Create a vector that has the comparison values and the names associated with the values. This vector was created in order for R to be able to order these values. This function will put the comparison values within the comparison_vector in increasing order, meaning the first value is the most similar to the human coronavirus spike protein. Each of these variables are global variables as they can be accessed from any portion of the program.
+comparison_vector <- c(HvD,HvP,HvB)
+names(comparison_vector) <- c("HvD", "HvP", "HvB")
+comparison_vector
+order(comparison_vector, decreasing = FALSE)
+
+#Write my own function to compare the distance alignment values of the different spike protein AA sequences. This function takes the possibility of human error in analysing the results. It will print out a smiley face or a sad face and text stating what the comparison means for the relationship between the original SARS-CoV-2 spike protein and the other spike proteins. Each of these variables are global variables as they can be accessed from any portion of the program.
+if (HvD < HvP) {
+print(":) Human coronavirus spike protein is more similar to the delta varient's spike than the pangolin spike protein :)") } else {print(":( Human coronavirus spike protein is less similar to the delta varient's spike than the pangolin spike protein :(") }
+
+if (HvD < HvB) {
+print(":) Human coronavirus spike protein is more similar to the delta varient's spike than the bat spike protein :)") } else {print(":( Human coronavirus spike protein is less similar to the delta varient's spike than the bat spike protein :(") }
+
+#download ape by going to the "packages" tab and clicking "install" and installing the package called "ape" in the CRAN repository. The ape package will allow us to plot a phylogenetic tree with the comparison values from the sProtienDA distance alignment data. the argument "main" allows us to have a title for the tree. Each of these variables are global variables as they can be accessed from any portion of the program.
+library(ape)
+spikeTree <- nj(sProteinDA)
+plot(spikeTree, main = "Phylogenetic Tree of Different Spike Protein AA Sequences")
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
